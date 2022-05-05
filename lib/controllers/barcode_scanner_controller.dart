@@ -12,13 +12,10 @@ class BarcodeScannerWithController extends StatefulWidget {
   const BarcodeScannerWithController({Key? key}) : super(key: key);
 
   @override
-  _BarcodeScannerWithControllerState createState() =>
-      _BarcodeScannerWithControllerState();
+  _BarcodeScannerWithControllerState createState() => _BarcodeScannerWithControllerState();
 }
 
-class _BarcodeScannerWithControllerState
-    extends State<BarcodeScannerWithController>
-    with SingleTickerProviderStateMixin {
+class _BarcodeScannerWithControllerState extends State<BarcodeScannerWithController> with SingleTickerProviderStateMixin {
   String? barcode;
   final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
 
@@ -33,6 +30,12 @@ class _BarcodeScannerWithControllerState
   void setData(qr) async {
     final SharedPreferences prefs = await _prefs;
     await prefs.setString("qrData", qr);
+  }
+
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
   }
 
   @override
@@ -57,10 +60,7 @@ class _BarcodeScannerWithControllerState
                     isStarted ? controller.stop() : controller.start();
                     isStarted = !isStarted;
                   });
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => DataProcessing()));
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => DataProcessing()));
                 },
               ),
               Align(
@@ -102,9 +102,7 @@ class _BarcodeScannerWithControllerState
                       ),
                       IconButton(
                         color: Colors.white,
-                        icon: isStarted
-                            ? const Icon(Icons.stop)
-                            : const Icon(Icons.play_arrow),
+                        icon: isStarted ? const Icon(Icons.stop) : const Icon(Icons.play_arrow),
                         iconSize: 32.0,
                         onPressed: () => setState(() {
                           isStarted ? controller.stop() : controller.start();
@@ -119,10 +117,7 @@ class _BarcodeScannerWithControllerState
                             child: Text(
                               barcode ?? 'Scan something!',
                               overflow: TextOverflow.fade,
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .headline4!
-                                  .copyWith(color: Colors.white),
+                              style: Theme.of(context).textTheme.headline4!.copyWith(color: Colors.white),
                             ),
                           ),
                         ),
